@@ -1,69 +1,32 @@
 import React, { useState } from 'react';
-import { 
-  StyleSheet, 
-  Text, 
-  View, 
-  TextInput, 
-  Button, 
-  FlatList 
-} from 'react-native';
+import { StyleSheet, View, FlatList } from 'react-native';
+
+import ToDoItem from './components/ToDoItem';
+import ToDoInput from './components/ToDoInput';
 
 export default function App() {
-  const [enteredItem, setEnteredItem] = useState('');
-  const [toDoItems, setToDoItems] = useState([]);
+    const [toDoItems, setToDoItems] = useState([]);
 
-  const itemInputHandler = (enteredText) => {
-    setEnteredItem(enteredText);
-  };
+    const addItemHandler = itemTitle => {
+        setToDoItems(currentItems => [
+            ...currentItems,
+            { key: Math.random().toString(), value: itemTitle }
+        ]);
+    };
 
-  const addItemHandler = () => {
-    setToDoItems(currentItems => [
-      ...currentItems, 
-      {key: Math.random().toString(), value: enteredItem}
-    ]);
-  };
-
-  return (
-    <View style={styles.screen}>
-      <View style={styles.inputContainer}>
-        <TextInput placeholder="TODO Item" 
-        style={styles.input} 
-        onChangeText={itemInputHandler}
-        value={enteredItem} />
-        <Button title="ADD" onPress={addItemHandler} />
-      </View>
-      <FlatList 
-        data={toDoItems} 
-        renderItem={itemData => (
-          <View style={styles.listItem}>
-            <Text>{itemData.item.value}</Text>
-          </View>
-        )} 
-      />
-    </View>
-  );
+    return (
+        <View style={styles.screen}>
+            <ToDoInput onAddItem={addItemHandler} />
+            <FlatList
+                data={toDoItems}
+                renderItem={itemData => <ToDoItem title={itemData.item.value} />}
+            />
+        </View>
+    );
 }
 
 const styles = StyleSheet.create({
-  screen: {
-    padding: 40
-  },
-  inputContainer: {
-    flexDirection: 'row', 
-    justifyContent: 'space-between', 
-    alignItems: 'center'
-  },
-  input: {
-    width: '80%', 
-    borderBottomColor: 'black', 
-    borderBottomWidth: 1, 
-    padding: 10
-  },
-  listItem: {
-    padding: 10,
-    marginVertical: 10,
-    backgroundColor: '#ccc',
-    borderColor: 'black',
-    borderWidth: 1
-  }
+    screen: {
+        padding: 40
+    }
 });
