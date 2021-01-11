@@ -10,16 +10,29 @@ export default function App() {
     const addItemHandler = itemTitle => {
         setToDoItems(currentItems => [
             ...currentItems,
-            { key: Math.random().toString(), value: itemTitle }
+            { id: Math.random().toString(), value: itemTitle }
         ]);
     };
+
+    const removeItemHandler = itemId => {
+        setToDoItems( currentItems => {
+            return currentItems.filter((item) => item.id !== itemId);
+        });
+    }
 
     return (
         <View style={styles.screen}>
             <ToDoInput onAddItem={addItemHandler} />
             <FlatList
+                keyExtractor={(item, index) => item.id}
                 data={toDoItems}
-                renderItem={itemData => <ToDoItem title={itemData.item.value} />}
+                renderItem={itemData => (
+                    <ToDoItem 
+                        id={itemData.item.id}
+                        onDelete={removeItemHandler}
+                        title={itemData.item.value}
+                    />
+                )}
             />
         </View>
     );
